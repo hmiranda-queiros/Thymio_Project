@@ -60,9 +60,9 @@ def plot(ax1, ax2, ax3, ax4, x_est, P_est, fig):
     ax4.plot(x4, y4, 'y')
     fig.canvas.draw()
 
-def gauss(mu, var, angle = 0):
+def gauss(mu, var, deg = 0):
     
-    if angle == 0 :
+    if deg == 0 :
         x = np.linspace(mu - 4 * math.sqrt(var), mu + 4 * math.sqrt(var), 200)
         
     else :

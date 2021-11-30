@@ -1,13 +1,8 @@
 import numpy as np
 from threading import Timer
 import math
+from motion import *
 
-
-
-#Constants
-Ts = 0.1
-thymio_speed_to_mms = 0.341
-distance_wheel = 95
 
 #Thymio goes forward
 q_F_x = 0.008
@@ -139,3 +134,5 @@ class RepeatedTimer(object):
     def stop(self):
         self._timer.cancel()
         self.is_running = False
+        
+       
