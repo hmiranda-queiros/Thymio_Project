@@ -8,6 +8,8 @@ center_offset = np.array([5.5,5.5])
 thymio_coords = np.array([[0,0], [11,0], [11,8.5], [10.2, 9.3], 
                           [8, 10.4], [5.5,11], [3.1, 10.5], 
                           [0.9, 9.4], [0, 8.5], [0,0]])-center_offset
+                          
+thymio_coords *= 10
 
 def rotate(angle, coords):
     """
@@ -38,8 +40,8 @@ def plot(ax1, ax2, ax3, ax4, x_est, P_est, fig):
     
     ax1.set_xlabel('Y')
     ax1.set_ylabel('X')
-    ax1.set_xlim(0,200)
-    ax1.set_ylim(0,200)
+    ax1.set_xlim(0,1000)
+    ax1.set_ylim(0,1000)
     ax1.invert_yaxis()
     ax1.set_aspect('equal', 'box')
 
