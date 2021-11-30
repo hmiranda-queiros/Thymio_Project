@@ -31,7 +31,7 @@ def plot(ax1, ax2, ax3, ax4, x_est, P_est, fig):
     
     x2, y2 = gauss(x_est[-1][0][0], P_est[-1][0][0])
     x3, y3 = gauss(x_est[-1][1][0], P_est[-1][1][1])
-    x4, y4 = gauss(x_est[-1][2][0], P_est[-1][2][2])
+    x4, y4 = gauss(x_est[-1][2][0], P_est[-1][2][2], 1)
     
     ax1.clear()
     ax2.clear()
@@ -40,8 +40,8 @@ def plot(ax1, ax2, ax3, ax4, x_est, P_est, fig):
     
     ax1.set_xlabel('Y')
     ax1.set_ylabel('X')
-    ax1.set_xlim(0,1000)
-    ax1.set_ylim(0,1000)
+    ax1.set_xlim(0,1280)
+    ax1.set_ylim(0,720)
     ax1.invert_yaxis()
     ax1.set_aspect('equal', 'box')
 

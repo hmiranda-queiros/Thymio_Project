@@ -85,7 +85,7 @@ def kalman_filter(meas_speed_left, meas_speed_right, x_est_prev, P_est_prev, Q, 
     
     #measurements
     speed_trans = (meas_speed_left + meas_speed_right) * thymio_speed_to_mms / 2
-    speed_rot =  (meas_speed_right - meas_speed_left) * (thymio_speed_to_mms / distance_wheel)
+    speed_rot =  (meas_speed_right - meas_speed_left) * thymio_speed_to_rads / 2
     
     theta_est = x_est_a_priori[2];
     x_dot = speed_trans * math.cos(theta_est)
