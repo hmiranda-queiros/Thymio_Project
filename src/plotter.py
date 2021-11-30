@@ -1,6 +1,7 @@
 import math
 import numpy as np
 import matplotlib.pyplot as plt
+import time
 
 # Thymio outline
 center_offset = np.array([5.5,5.5])
@@ -18,37 +19,63 @@ def rotate(angle, coords):
                   (np.sin(angle),  np.cos(angle))))
     
     return R.dot(coords.transpose()).transpose()
+     
     
-# def start_plot(x_est, P_ext):
-    # abs_Thymio_coords = thymio_coords + np.array([x_est[-1][1][0], x_est[-1][0][0]])
-    # x, y = gauss(x_est[-1][0][0], P_ext[-1][0][0])
+def plot(ax1, ax2, ax3, ax4, x_est, P_est, fig):
+    rotated_thymio_coords = rotate(- x_est[-1][2][0], thymio_coords) 
+    abs_Thymio_coords = rotated_thymio_coords + np.array([x_est[-1][1][0], x_est[-1][0][0]])
+    x1 = abs_Thymio_coords[:, 0]
+    y1 = abs_Thymio_coords[:, 1]
+    
+    x2, y2 = gauss(x_est[-1][0][0], P_est[-1][0][0])
+    x3, y3 = gauss(x_est[-1][1][0], P_est[-1][1][1])
+    x4, y4 = gauss(x_est[-1][2][0], P_est[-1][2][2])
+    
+    ax1.clear()
+    ax2.clear()
+    ax3.clear()
+    ax4.clear()
+    
+    ax1.set_xlabel('Y')
+    ax1.set_ylabel('X')
+    ax1.set_xlim(0,200)
+    ax1.set_ylim(0,200)
+    ax1.invert_yaxis()
+    ax1.set_aspect('equal', 'box')
 
-    # plt.figure(figsize=(10,20))
-    # plt.subplot(211)
-    # plt.xlim(0,200)
-    # plt.ylim(0,200)
-    # plt.gca().invert_yaxis()
-    # body, = plt.plot(abs_Thymio_coords[:, 0], abs_Thymio_coords[:, 1], color="g")
+    ax2.set_xlabel('X')
+    ax2.set_ylabel('Gauss')
     
-    # plt.subplot(212)
-    # g_x, = plt.plot(x, y, color="b")
+    ax3.set_xlabel('X')
+    ax3.set_ylabel('Gauss')
+    
+    ax4.set_xlabel('Theta')
+    ax4.set_ylabel('Gauss')
+    
+    ax1.plot(x1, y1, 'b')
+    ax2.plot(x2, y2, 'g')
+    ax3.plot(x3, y3, 'r')
+    ax4.plot(x4, y4, 'y')
+    fig.canvas.draw()
+
+def gauss(mu, var, angle = 0):
+    
+    if angle == 0 :
+        x = np.linspace(mu - 4 * math.sqrt(var), mu + 4 * math.sqrt(var), 200)
         
-    # return body  
-
-def gauss(mu, sigma):
-    
-    x = np.linspace(mu - 4*sigma, mu + 4*sigma, 50)
+    else :
+        var *= (180/math.pi)**2
+        mu *= (180/math.pi)
+        x = np.linspace(mu - 4 * math.sqrt(var),  mu + 4 * math.sqrt(var), 200)
+        
     y = []
     
     for e in x:
-        y.append(1/(math.sqrt(2 * math.pi) * sigma) * math.exp(-(e - mu)**2/(2 * sigma**2)))
+        y.append(1/math.sqrt(2 * math.pi * var) * math.exp(-(e - mu)**2/(2 * var)))
+        
+        
 
     return x, y    
     
-# def update_plot(x_est, body):
-    # rotated_thymio_coords = rotate(- x_est[-1][2][0], thymio_coords) 
-    # abs_Thymio_coords = rotated_thymio_coords + np.array([x_est[-1][1][0], x_est[-1][0][0]])
     
-    # body.set_xdata(abs_Thymio_coords[:, 0])
-    # body.set_ydata(abs_Thymio_coords[:, 1])
-    # plt.draw()
+    
