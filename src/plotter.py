@@ -19,21 +19,21 @@ def rotate(angle, coords):
     
     return R.dot(coords.transpose()).transpose()
     
-def start_plot(x_est, P_ext):
-    abs_Thymio_coords = thymio_coords + np.array([x_est[-1][1][0], x_est[-1][0][0]])
-    x, y = gauss(x_est[-1][0][0], P_ext[-1][0][0])
+# def start_plot(x_est, P_ext):
+    # abs_Thymio_coords = thymio_coords + np.array([x_est[-1][1][0], x_est[-1][0][0]])
+    # x, y = gauss(x_est[-1][0][0], P_ext[-1][0][0])
 
-    plt.figure(figsize=(10,20))
-    plt.subplot(211)
-    plt.xlim(0,200)
-    plt.ylim(0,200)
-    plt.gca().invert_yaxis()
-    body, = plt.plot(abs_Thymio_coords[:, 0], abs_Thymio_coords[:, 1], color="g")
+    # plt.figure(figsize=(10,20))
+    # plt.subplot(211)
+    # plt.xlim(0,200)
+    # plt.ylim(0,200)
+    # plt.gca().invert_yaxis()
+    # body, = plt.plot(abs_Thymio_coords[:, 0], abs_Thymio_coords[:, 1], color="g")
     
-    plt.subplot(212)
-    g_x, = plt.plot(x, y, color="b")
+    # plt.subplot(212)
+    # g_x, = plt.plot(x, y, color="b")
         
-    return body  
+    # return body  
 
 def gauss(mu, sigma):
     
@@ -45,10 +45,10 @@ def gauss(mu, sigma):
 
     return x, y    
     
-def update_plot(x_est, body):
-    rotated_thymio_coords = rotate(- x_est[-1][2][0], thymio_coords) 
-    abs_Thymio_coords = rotated_thymio_coords + np.array([x_est[-1][1][0], x_est[-1][0][0]])
+# def update_plot(x_est, body):
+    # rotated_thymio_coords = rotate(- x_est[-1][2][0], thymio_coords) 
+    # abs_Thymio_coords = rotated_thymio_coords + np.array([x_est[-1][1][0], x_est[-1][0][0]])
     
-    body.set_xdata(abs_Thymio_coords[:, 0])
-    body.set_ydata(abs_Thymio_coords[:, 1])
-    plt.draw()
+    # body.set_xdata(abs_Thymio_coords[:, 0])
+    # body.set_ydata(abs_Thymio_coords[:, 1])
+    # plt.draw()
