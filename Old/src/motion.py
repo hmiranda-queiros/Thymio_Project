@@ -5,8 +5,8 @@ import math
 
 #Constants
 Ts = 0.1
-thymio_speed_to_mms = 0.36
-thymio_speed_to_rads = 0.0071
+thymio_speed_to_mms = 0.39
+thymio_speed_to_rads = 0.007
 
 
 def move_forward(dist):

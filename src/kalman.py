@@ -1,32 +1,56 @@
 import numpy as np
-from threading import Timer
-import math
 from motion import *
 
+#Constant variances
+q_x = 0.011  
+q_y =  0.011  
+q_theta = 0.0000087  
+q_x_dot = 1.1  
+q_y_dot =  1.1  
+q_theta_dot = 0.00087
 
-#Thymio goes forward
-q_F_x = 0.008
-q_F_y =  0.008
-q_F_theta = 0.000006
-q_F_x_dot = 0.779  
-q_F_y_dot =  0.779  
-q_F_theta_dot = 0.000591
+r_x = 2  
+r_y = 2
+r_theta = 0.035
+r_x_dot = 1.1  
+r_y_dot = 1.1
+r_theta_dot = 0.00087
 
-Q_F = np.array([[q_F_x, 0, 0, 0, 0, 0], 
-                [0, q_F_y, 0, 0, 0, 0], 
-                [0, 0, q_F_theta, 0, 0, 0],
-                [0, 0, 0, q_F_x_dot, 0, 0], 
-                [0, 0, 0, 0, q_F_y_dot, 0], 
-                [0, 0, 0, 0, 0, q_F_theta_dot]]);
+Q = np.array([[q_x, 0, 0, 0, 0, 0], 
+                [0, q_y, 0, 0, 0, 0], 
+                [0, 0, q_theta, 0, 0, 0],
+                [0, 0, 0, q_x_dot, 0, 0], 
+                [0, 0, 0, 0, q_y_dot, 0], 
+                [0, 0, 0, 0, 0, q_theta_dot]]);
 
-r_F_x_dot = 0.779  
-r_F_y_dot = 0.779
-r_F_theta_dot = 0.000591
 
-R_F = np.array([[r_F_x_dot, 0, 0],
-               [0, r_F_y_dot, 0],
-               [0, 0, r_F_theta_dot]]);
+#Camera is online
+R_ON = ([[r_x, 0, 0, 0, 0, 0], 
+        [0, r_y, 0, 0, 0, 0], 
+        [0, 0, r_theta, 0, 0, 0],
+        [0, 0, 0, r_x_dot, 0, 0], 
+        [0, 0, 0, 0, r_y_dot, 0], 
+        [0, 0, 0, 0, 0, r_theta_dot]]);
+        
+H_ON = np.array([[1, 0, 0, 0, 0, 0], 
+                [0, 1, 0, 0, 0, 0], 
+                [0, 0, 1, 0, 0, 0],
+                [0, 0, 0, 1, 0, 0], 
+                [0, 0, 0, 0, 1, 0], 
+                [0, 0, 0, 0, 0, 1]]);
 
+
+#Camera is offline
+R_OFF = ([[r_x_dot, 0, 0], 
+        [0, r_y_dot, 0], 
+        [0, 0, r_theta_dot]]);
+        
+H_OFF = np.array([[0, 0, 0, 1, 0, 0], 
+                [0, 0, 0, 0, 1, 0], 
+                [0, 0, 0, 0, 0, 1]]);
+               
+                
+#Thymio goes forward                
 A_F = np.array([[1, 0, 0, Ts, 0, 0], 
                 [0, 1, 0, 0, Ts, 0], 
                 [0, 0, 1, 0, 0, 0],
@@ -34,30 +58,7 @@ A_F = np.array([[1, 0, 0, Ts, 0, 0],
                 [0, 0, 0, 0, 1, 0], 
                 [0, 0, 0, 0, 0, 1]]);
 
-
 #Thymio rotates
-q_R_x = 0.01
-q_R_y =  0.01
-q_R_theta = 0.00001 
-q_R_x_dot = 1.31
-q_R_y_dot =  1.31
-q_R_theta_dot = 0.00122
-
-Q_R = np.array([[q_R_x, 0, 0, 0, 0, 0], 
-                [0, q_R_y, 0, 0, 0, 0], 
-                [0, 0, q_R_theta, 0, 0, 0],
-                [0, 0, 0, q_R_x_dot, 0, 0], 
-                [0, 0, 0, 0, q_R_y_dot, 0], 
-                [0, 0, 0, 0, 0, q_R_theta_dot]]);
-
-r_R_x_dot = 1.31
-r_R_y_dot = 1.31
-r_R_theta_dot = 0.00122  
-
-R_R = np.array([[r_R_x_dot, 0, 0],
-               [0, r_R_y_dot, 0],
-               [0, 0, r_R_theta_dot]]);
-
 A_R = np.array([[1, 0, 0, 0, 0, 0], 
                 [0, 1, 0, 0, 0, 0], 
                 [0, 0, 1, 0, 0, Ts],
@@ -65,13 +66,9 @@ A_R = np.array([[1, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 1, 0], 
                 [0, 0, 0, 0, 0, 1]]);
 
-# commun matrix
-H = np.array([[0, 0, 0, 1, 0, 0], 
-              [0, 0, 0, 0, 1, 0],
-              [0, 0, 0, 0, 0, 1]]);
               
               
-def kalman_filter(meas_speed_left, meas_speed_right, x_est_prev, P_est_prev, Q, R, A):
+def kalman_filter(meas_pos, meas_speed_left, meas_speed_right, x_est_prev, P_est_prev, A, camera_on):
     
     
     ## Prediciton through the a priori estimate
@@ -87,13 +84,26 @@ def kalman_filter(meas_speed_left, meas_speed_right, x_est_prev, P_est_prev, Q, 
     speed_trans = (meas_speed_left + meas_speed_right) * thymio_speed_to_mms / 2
     speed_rot =  (meas_speed_right - meas_speed_left) * thymio_speed_to_rads / 2
     
-    theta_est = x_est_a_priori[2];
-    x_dot = speed_trans * math.cos(theta_est)
-    y_dot = speed_trans * math.sin(theta_est)
-    theta_dot = speed_rot
+    if camera_on :
+        theta_meas = meas_pos[2]
+        x_dot = speed_trans * np.cos(theta_meas)
+        y_dot = speed_trans * np.sin(theta_meas)
+        theta_dot = [speed_rot]
+        
+        y = np.array([meas_pos[0], meas_pos[1], meas_pos[2], x_dot, y_dot, theta_dot])
+        H = H_ON
+        R = R_ON
+        
     
-    y = np.array([[x_dot], [y_dot], [theta_dot]])
-   
+    else :
+        theta_est = x_est_a_priori[2];
+        x_dot = speed_trans * np.cos(theta_est)
+        y_dot = speed_trans * np.sin(theta_est)
+        theta_dot = [speed_rot]
+        
+        y = np.array([x_dot, y_dot, theta_dot])
+        H = H_OFF
+        R = R_OFF
 
     # innovation / measurement residual
     i = y - np.dot(H, x_est_a_priori)
@@ -110,29 +120,5 @@ def kalman_filter(meas_speed_left, meas_speed_right, x_est_prev, P_est_prev, Q, 
     
     return x_est, P_est
     
-    
-class RepeatedTimer(object):
-    def __init__(self, interval, function, *args):
-        self._timer     = None
-        self.interval   = interval
-        self.function   = function
-        self.args       = args
-        self.is_running = False
-        self.start()
-
-    def _run(self):
-        self.is_running = False
-        self.start()
-        self.function(*self.args)
-
-    def start(self):
-        if not self.is_running:
-            self._timer = Timer(self.interval, self._run)
-            self._timer.start()
-            self.is_running = True
-
-    def stop(self):
-        self._timer.cancel()
-        self.is_running = False
         
        

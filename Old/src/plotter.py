@@ -1,6 +1,7 @@
 import math
 import numpy as np
 import matplotlib.pyplot as plt
+import time
 
 # Thymio outline
 center_offset = np.array([5.5,5.5])
