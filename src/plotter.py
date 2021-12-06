@@ -23,14 +23,14 @@ def rotate(angle, coords):
      
     
 def plot(ax1, ax2, ax3, ax4, x_est, P_est, fig):
-    rotated_thymio_coords = rotate(- x_est[-1][2][0], thymio_coords) 
-    abs_Thymio_coords = rotated_thymio_coords + np.array([x_est[-1][1][0], x_est[-1][0][0]])
+    rotated_thymio_coords = rotate(- x_est[2][0], thymio_coords) 
+    abs_Thymio_coords = rotated_thymio_coords + np.array([x_est[1][0], x_est[0][0]])
     x1 = abs_Thymio_coords[:, 0]
     y1 = abs_Thymio_coords[:, 1]
     
-    x2, y2 = gauss(x_est[-1][0][0], P_est[-1][0][0])
-    x3, y3 = gauss(x_est[-1][1][0], P_est[-1][1][1])
-    x4, y4 = gauss(x_est[-1][2][0], P_est[-1][2][2], 1)
+    x2, y2 = gauss(x_est[0][0], P_est[0][0])
+    x3, y3 = gauss(x_est[1][0], P_est[1][1])
+    x4, y4 = gauss(x_est[2][0], P_est[2][2], 1)
     
     ax1.clear()
     ax2.clear()
