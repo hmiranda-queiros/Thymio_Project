@@ -9,9 +9,10 @@ q_x_dot = 1.1
 q_y_dot =  1.1  
 q_theta_dot = 0.00087
 
-r_x = 2  
-r_y = 2
-r_theta = 0.035
+
+r_x = 0.025 
+r_y = 0.18
+r_theta = 0.00057
 r_x_dot = 1.1  
 r_y_dot = 1.1
 r_theta_dot = 0.00087
