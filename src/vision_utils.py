@@ -217,7 +217,7 @@ def overlay_vis_graph(Thymio_start, Thymio_center, Thymio_target, obs_corners, o
     for point in point_list:
         cv2.circle(warpedimg_clean_cpy, point, 5, color=(217, 83, 25), thickness=10)
     cv2.circle(warpedimg_clean_cpy, tuple([Thymio_start[1],Thymio_start[0]]), 5, color=(126, 47, 142), thickness=12)
-    cv2.circle(warpedimg_clean_cpy, tuple([Thymio_center[1],Thymio_center[0]]), 5, color=(126, 47, 142), thickness=12)
+    cv2.circle(warpedimg_clean_cpy, tuple([Thymio_center[1],Thymio_center[0]]), 5, color=(126, 47, 142), thickness=16)
     cv2.circle(warpedimg_clean_cpy, tuple([Thymio_target[1],Thymio_target[0]]), 5, color=(126, 47, 142), thickness=12)
     for i in range(len(optimal_path)-1):
         cv2.line(warpedimg_clean_cpy,tuple([int(optimal_path[i][1][1]),int(optimal_path[i][1][0])]),
@@ -225,5 +225,6 @@ def overlay_vis_graph(Thymio_start, Thymio_center, Thymio_target, obs_corners, o
                 color=(119, 172, 48),
                 thickness=12)
     cv2.putText(warpedimg_clean_cpy, 'Start', tuple([Thymio_start[1],Thymio_start[0]]), fontFace = cv2.FONT_HERSHEY_SIMPLEX, fontScale=1.5, color = (0,0,0),thickness = 7)
+    cv2.putText(warpedimg_clean_cpy, 'Robot', tuple([Thymio_center[1],Thymio_center[0]]), fontFace = cv2.FONT_HERSHEY_SIMPLEX, fontScale=1.5, color = (0,0,0),thickness = 7)
     cv2.putText(warpedimg_clean_cpy, 'Goal', tuple([Thymio_target[1],Thymio_target[0]]), fontFace = cv2.FONT_HERSHEY_SIMPLEX, fontScale=1.5, color = (0,0,0),thickness = 7)
     return(warpedimg_clean_cpy)
