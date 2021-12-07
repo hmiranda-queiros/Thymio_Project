@@ -131,7 +131,7 @@ def localisation_cam_all(frame):
         contours, hierarchy = cv2.findContours(obstacles_mask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
         obstacles_mask[obstacles_mask==255]=1
         for cnt in contours:
-            if cv2.contourArea(cnt) > 1000:#drop spots
+            if cv2.contourArea(cnt) > 1300:#drop spots
                 temp = []
                 epsilon = TH_Poly*cv2.arcLength(cnt,True)
                 approx = cv2.approxPolyDP(cnt,epsilon,True)
@@ -149,8 +149,9 @@ def localisation_cam_all(frame):
         # thymio_icon = cv2.cvtColor(thymio_icon, cv2.COLOR_RGB2BGR)
         # warpedimg_clean = merge_img(img_out, rotate_image(thymio_icon,Thymio_dir), int(Thymio_center[0])-120, int(Thymio_center[0])+120, int(Thymio_center[1])-120, int(Thymio_center[1])+120)
         # warpedimg_clean = warpedimg_clean[:,:,0:3]
-    except:
+    except Exception as e:
         cam_OK=False
+        print(e)
     return cam_OK, Thymio_start, Thymio_dir, Thymio_target, obs_corners, obstacles_mask, img_out
 
 def localisation_cam(frame):
