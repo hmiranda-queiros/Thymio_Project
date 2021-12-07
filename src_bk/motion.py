@@ -11,7 +11,7 @@ thymio_speed_to_rads = 0.0071
 
 def move_forward(dist):
     time = abs(dist) / (thymio_speed_to_mms * 100)
-    size_command = math.ceil(time / Ts)
+    size_command = int(time / Ts)
     commands = []
     
     for i in range(size_command) :
@@ -21,7 +21,7 @@ def move_forward(dist):
     
 def move_backward(dist):
     time = abs(dist) / (thymio_speed_to_mms * 100)
-    size_command = math.ceil(time / Ts)
+    size_command = int(time / Ts)
     commands = []
     
     for i in range(size_command) :
@@ -31,7 +31,7 @@ def move_backward(dist):
     
 def turn_left(angle):
     time = abs(angle) / (thymio_speed_to_rads * 100)
-    size_command = math.ceil(time / Ts)
+    size_command = int(time / Ts)
     commands = []
     
     for i in range(size_command) :
@@ -41,7 +41,7 @@ def turn_left(angle):
     
 def turn_right(angle):
     time = abs(angle) / (thymio_speed_to_rads * 100)
-    size_command = math.ceil(time / Ts)
+    size_command = int(time / Ts)
     commands = []
     
     for i in range(size_command) :
