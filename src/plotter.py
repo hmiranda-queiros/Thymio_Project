@@ -26,22 +26,24 @@ def plot(ax1, ax2, ax3, x_est, P_est, fig):
     ax3.plot(x3, y3, 'y')
     fig.canvas.draw()
 
+  
+
 def gauss(mu, var, deg = 0):
     
     if deg == 0 :
-        x = np.linspace(mu - 4 * math.sqrt(var), mu + 4 * math.sqrt(var), 200)
+        x = np.linspace(mu - 10 , mu + 10, 200)
         
     else :
         var *= (180/math.pi)**2
         mu *= (180/math.pi)
-        x = np.linspace(mu - 4 * math.sqrt(var),  mu + 4 * math.sqrt(var), 200)
+        x = np.linspace(mu - 10,  mu + 10, 200)
         
     y = []
     
     for e in x:
         y.append(1/math.sqrt(2 * math.pi * var) * math.exp(-(e - mu)**2/(2 * var)))
         
-    return x, y    
-    
-    
+        
+
+    return x, y       
     
