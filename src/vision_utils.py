@@ -82,8 +82,8 @@ def merge_img(map_img, thymio_img, y1, y2, x1, x2):
 
 def localisation_cam_all(frame):
     '''take camera instance as input, return if camera is ok, current Thymio pose, current obstacle map'''
-    red_lower = np.array([140, 60, 220])
-    red_upper = np.array([170, 100, 255])
+    red_lower = np.array([155, 100, 220])
+    red_upper = np.array([180, 130, 255])
     # red_lower = np.array([140, 120, 150])
     # red_upper = np.array([180, 180, 210])
     # ret, frame = cap.read()
