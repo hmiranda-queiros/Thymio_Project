@@ -305,6 +305,13 @@ def discretize_path(start_po, edges, optimal_path):
     return discretized_path
 
 
+def calibrate_path(current_po, node):
+    angle = calc_angle(current_po[0:-1], node)
+    angle = angle - current_po[-1]
+    dist = np.linalg.norm(node - current_po[0:-1])
+    return angle, dist
+
+
 def is_target_reached(target_po, current_po, TH_EPS_RO, TH_EPS_DI, commands):
     if (len(commands) == 0) or \
        ((np.linalg.norm(target_po[:-1] - np.array(current_po[:-1])) <= TH_EPS_DI) and\
@@ -408,14 +415,3 @@ def do_global_navigation(obs_coords, start_po, goal_po):
     # plot_map(*swap_xy(obs_coords, start, goal, edges, optimal_path))
     # print_data(nodes, edges, h, optimal_path, discretized_path)
     return discretized_path, optimal_path
-
-
-def get_nodes_of_commands(discretized_path, commands):
-    nodes_of_commands = []
-    j = 0
-    for i in range(len(commands) - 1):
-        nodes_of_commands.append([discretized_path[j][3], discretized_path[j][6]])
-        if commands[i] != commands[i + 1]:
-            j = j + 1
-    nodes_of_commands.append([discretized_path[-1][3], discretized_path[-1][6]])
-    return nodes_of_commands
