@@ -9,7 +9,6 @@ q_x_dot = 1.1
 q_y_dot =  1.1  
 q_theta_dot = 0.00087
 
-
 r_x = 0.025 
 r_y = 0.18
 r_theta = 0.00057
@@ -70,7 +69,20 @@ A_R = np.array([[1, 0, 0, 0, 0, 0],
               
               
 def kalman_filter(meas_pos, meas_speed_left, meas_speed_right, x_est_prev, P_est_prev, A, camera_on):
+    """
+    Estimates the current state using input sensor data and the previous state
     
+    param meas_pos: measured position with camera (in mm and rad)
+    param meas_speed_left: measured speed of left wheel (Thymio units)
+    param meas_speed_left: measured speed of right wheel (Thymio units)
+    param x_est_prev: previous state a posteriori estimation
+    param P_est_prev: previous state a posteriori covariance
+    param A: matrix A of the state space system
+    param camera_on: state of the camera ON or OFF
+    
+    return x_est: new a posteriori state estimation
+    return P_est: new a posteriori state covariance
+    """
     
     ## Prediciton through the a priori estimate
     # estimated mean of the state
@@ -81,12 +93,12 @@ def kalman_filter(meas_pos, meas_speed_left, meas_speed_right, x_est_prev, P_est
     P_est_a_priori = P_est_a_priori + Q
     
     
-    #measurements
+    # measurements conversion from thymio speed to real speed in mm/s or rad/s
     speed_trans = (meas_speed_left + meas_speed_right) * thymio_speed_to_mms / 2
     speed_rot =  (meas_speed_right - meas_speed_left) * thymio_speed_to_rads / 2
     
     if camera_on :
-        theta_meas = meas_pos[2]
+        theta_meas = meas_pos[2]                      
         x_dot = speed_trans * np.cos(theta_meas)
         y_dot = speed_trans * np.sin(theta_meas)
         theta_dot = [speed_rot]
@@ -97,7 +109,8 @@ def kalman_filter(meas_pos, meas_speed_left, meas_speed_right, x_est_prev, P_est
         
     
     else :
-        theta_est = x_est_a_priori[2];
+        # when camera is off we use the last theta estimation to compute the velocities
+        theta_est = x_est_a_priori[2]
         x_dot = speed_trans * np.cos(theta_est)
         y_dot = speed_trans * np.sin(theta_est)
         theta_dot = [speed_rot]
@@ -108,12 +121,12 @@ def kalman_filter(meas_pos, meas_speed_left, meas_speed_right, x_est_prev, P_est
 
     # innovation / measurement residual
     i = y - np.dot(H, x_est_a_priori)
+    
     # measurement prediction covariance
     S = np.dot(H, np.dot(P_est_a_priori, H.T)) + R
              
     # Kalman gain (tells how much the predictions should be corrected based on the measurements)
     K = np.dot(P_est_a_priori, np.dot(H.T, np.linalg.inv(S)))
-    
     
     # a posteriori estimate
     x_est = x_est_a_priori + np.dot(K,i)

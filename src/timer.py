@@ -1,6 +1,10 @@
 from threading import Timer
 
 class RepeatedTimer(object):
+    """
+    A class usefull to run a function, every interval in seconds, in another thread.
+    Here we launch a new thread every interval.
+    """
     def __init__(self, interval, function, *args):
         self._timer     = None
         self.interval   = interval
@@ -25,6 +29,10 @@ class RepeatedTimer(object):
         self.is_running = False
         
 class RepeatedTimerMode(object):
+    """
+    A class usefull to run a function, every interval in seconds, in another thread.
+    Here we launch a new thread only when interval is passed and that self._run finished.
+    """
     def __init__(self, interval, function, *args):
         self._timer     = None
         self.interval   = interval
